@@ -1,0 +1,13 @@
+﻿@model IList<Pivotal.Project>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Projects</h2>
+<ul>
+    @foreach (var project in Model) {
+        <li><a href="~/Pivotal/Stories/@project.Id">@project.Name</a></li>
+    }
+</ul>

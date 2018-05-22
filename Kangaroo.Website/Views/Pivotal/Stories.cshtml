@@ -1,0 +1,11 @@
+﻿@model System.Collections.Generic.IList<Pivotal.Story>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>stories</h2>
+@foreach (var story in Model) {
+    <div class="story">@story.Name</div>
+}
