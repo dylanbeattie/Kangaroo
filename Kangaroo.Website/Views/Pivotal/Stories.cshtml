@@ -4,8 +4,62 @@
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
-
-<h2>stories</h2>
-@foreach (var story in Model) {
-    <div class="story">@story.Name</div>
+@foreach (var group in Model.GroupBy(s => s.CurrentState)) {
+    <div class="kanban-state">
+        <h4>@group.Key</h4>
+            @foreach (var story in group) {
+                <div class="story">
+                    <p>@story.Name</p>
+                    @Html.Raw(String.Join("", story.History.Select(h => $"<span class=\"history {h}\"></span>")))
+                </div>
+            }
+    </div>
 }
+<style>
+    div.kanban-state {
+        height: 1200px;
+        width: 200px;
+        float: left;
+        border-left: 2px solid #000000;
+        background-color: #ccc;
+        padding: 4px;
+    }
+    div.kanban-state div.story {
+        display: block;
+        list-style: none;
+        margin: 4px;
+        padding: 2px;
+        border: 1px solid #000000;
+        background-color: #ffffff;
+        font-size: 10px;
+    }
+    
+     span.history {
+         width: 4px;
+         height: 12px;
+         border-radius: 2px;
+         background-color: #00bfff;
+         border: 0px;
+         display: inline-block;
+         margin-right: 1px;
+     }
+
+    span.history.unscheduled { background-color: #ccc; }
+
+    span.history.planned { background-color: #660099; }
+
+    span.history.unstarted { background-color: #333; }
+
+    span.history.started { background-color: #00bfff }
+
+    span.history.delivered { background-color: #ffcc00; }
+
+    span.history.rejected { background-color: #cc3333; }
+
+    span.history.accepted { background-color: #00ff00; }
+    
+    
+    
+    accepted, delivered, finished, started, rejected, planned, unstarted, unscheduled 
+    
+</style>
