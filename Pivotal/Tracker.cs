@@ -7,7 +7,14 @@ using Newtonsoft.Json;
 
 namespace Pivotal {
     public class Tracker {
-        private const string TRACKER_API_TOKEN = "b1be30c19645d929605c3ffdb23dfad8";
+        private static string trackerApiToken;
+        public Tracker() {
+            trackerApiToken = Environment.GetEnvironmentVariable("PIVOTAL_TRACKER_API_TOKEN");
+            if (String.IsNullOrEmpty(trackerApiToken)) {
+                throw new Exception("You must set the environment variable PIVOTAL_TRACKER_API_TOKEN");
+            }
+        }
+        
         private const string BASE_URL = "https://www.pivotaltracker.com/services/v5";
 
         public dynamic Me() {
@@ -16,7 +23,7 @@ namespace Pivotal {
 
         private dynamic Get(string path) {
             using (var wc = new WebClient()) {
-                wc.Headers.Add("X-TrackerToken", TRACKER_API_TOKEN);
+                wc.Headers.Add("X-TrackerToken", trackerApiToken);
                 return wc.DownloadString(BASE_URL + path);
             }
         }
@@ -28,7 +35,7 @@ namespace Pivotal {
 
         public IList<Story> Stories(int projectId) {
             using (var wc = new WebClient()) {
-                wc.Headers.Add("X-TrackerToken", TRACKER_API_TOKEN);
+                wc.Headers.Add("X-TrackerToken", trackerApiToken);
                 var json = wc.DownloadString($"{BASE_URL}/projects/{projectId}/stories/");
                 // TODO: pagination stuff here?
                 return JsonConvert.DeserializeObject<List<Story>>(json);
