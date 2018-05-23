@@ -121,6 +121,11 @@
       <e p="packages" t="ExcludeRecursive" />
       <e p="Pivotal" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
+        <e p="Model" t="Include">
+          <e p="Project.cs" t="Include" />
+          <e p="Story.cs" t="Include" />
+          <e p="StoryTransition.cs" t="Include" />
+        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp2.0" t="Include">

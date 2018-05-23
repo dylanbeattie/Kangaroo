@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks.Dataflow;
 using System.Web;
 using Newtonsoft.Json;
+using Pivotal.Model;
 
 namespace Pivotal {
     public class Tracker {
@@ -94,58 +95,5 @@ namespace Pivotal {
 
             return stories;
         }
-    }
-
-    public class Project {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Story {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-
-        [JsonProperty("current_state")]
-        public string CurrentState { get; set; }
-
-        public List<StoryTransition> Transitions { get; set; } = new List<StoryTransition>();
-
-        public string[] History {
-            get {
-                if (this.Transitions == null || this.Transitions.Count == 0) return new string[] { };
-
-                var states = new List<string>();
-                for (var i = 0; i < this.Transitions.Count - 1; i++) {
-                    var t1 = this.Transitions[i];
-                    var t2 = this.Transitions[i + 1];
-                    var days = (int) Math.Ceiling((t2.OccurredAt - t1.OccurredAt).TotalDays);
-                    for (var j = 0; j < days; j++) states.Add(t1.State);
-                }
-
-                var tf = this.Transitions.LastOrDefault();
-                var now = DateTime.Now;
-                var d2 = (int) Math.Ceiling((now - tf.OccurredAt).TotalDays);
-                for (var j = 0; j < d2; j++) states.Add(tf.State);
-                return states.ToArray();
-            }
-        }
-    }
-
-
-    public class StoryTransition {
-        public string State { get; set; }
-
-        [JsonProperty("story_id")]
-        public int StoryId { get; set; }
-
-        [JsonProperty("project_id")]
-        public int ProjectId { get; set; }
-
-        [JsonProperty("occurred_at")]
-        public DateTime OccurredAt { get; set; }
-
-        [JsonProperty("performed_by_id")]
-        public int PerformedById { get; set; }
     }
 }
